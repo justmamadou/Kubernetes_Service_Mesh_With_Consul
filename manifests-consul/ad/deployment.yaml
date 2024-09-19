@@ -1,0 +1,25 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: adservice
+spec:
+  selector:
+    matchLabels:
+      app: adservice
+  template:
+    metadata:
+      labels:
+        app: adservice
+      annotations:
+        consul.hashicorp.com/connect-inject: 'true'
+    spec:
+      containers:
+      - name: adservice-app
+        image: gcr.io/google-samples/microservices-demo/adservice:v0.8.0
+        ports:
+        - containerPort: 9555
+        env:
+        - name: PORT
+          value: "9555"
+

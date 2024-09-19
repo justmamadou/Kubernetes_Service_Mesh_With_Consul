@@ -1,0 +1,41 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend
+spec:
+  selector:
+    matchLabels:
+      app: frontend
+  template:
+    metadata:
+      labels:
+        app: frontend
+      annotations:
+        consul.hashicorp.com/connect-inject: 'true'
+        consul.hashicorp.com/transparent-proxy: 'false'
+        consul.hashicorp.com/connect-service-upstreams: 'productcatalogservice:3550,shippingservice:50052,currencyservice:7000,cartservice:7070,recommendationservice:8080,checkoutservice:5050,adservice:9555'
+    spec:
+      containers:
+        - name: frontend-app
+          image: gcr.io/google-samples/microservices-demo/frontend:v0.8.0
+          ports:
+          - containerPort: 8080
+          env:
+          - name: PORT
+            value: "8080"
+          - name: PRODUCT_CATALOG_SERVICE_ADDR
+            value: "localhost:3550"
+          - name: CURRENCY_SERVICE_ADDR
+            value: "localhost:7000"
+          - name: CART_SERVICE_ADDR
+            value: "localhost:7070"
+          - name: RECOMMENDATION_SERVICE_ADDR
+            value: "localhost:8080"
+          - name: SHIPPING_SERVICE_ADDR
+            value: "localhost:50051"
+          - name: CHECKOUT_SERVICE_ADDR
+            value: "localhost:5050"
+          - name: AD_SERVICE_ADDR
+            value: "localhost:9555"
+
